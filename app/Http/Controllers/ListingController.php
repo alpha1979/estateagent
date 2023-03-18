@@ -21,28 +21,7 @@ class ListingController extends Controller
             'priceFrom', 'priceTo', 'beds', 'baths', 'areaFrom', 'areaTo'
         ]);
 
-        $listings = Listing::orderByDesc('created_at');
-
-        if ($filters['priceFrom'] ?? false) {
-            $listings->where('price', '>=', $filters['priceFrom']);
-        }
-
-        if ($filters['priceTo'] ?? false) {
-            $listings->where('price','<=', $filters['priceTo']);
-        }
-
-        if ($filters['beds'] ?? false) {
-            $listings->where('beds', '<=',$filters['beds']);
-        }
-        if ($filters['baths']?? false) {
-            $listings->where('baths','<=', $filters['baths']);
-        }
-        if ($filters['areaFrom'] ?? false) {
-            $listings->where('area', '>=', $filters['areaFrom']);
-        }
-        if ($filters['areaTo'] ?? false) {
-            $listings->where('area', '<=', $filters['areaTo']);
-        }
+        $listings = Listing::mostRecent()->filterParam($filters);
         
         return inertia(
             'Listing/Index', 
@@ -54,7 +33,6 @@ class ListingController extends Controller
             ]
             );
     }
-
 
     public function create(): Response
     {
